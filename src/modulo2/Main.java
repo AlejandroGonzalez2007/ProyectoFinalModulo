@@ -1,44 +1,37 @@
 package modulo2;
 /*
  * Variables utilizadas en esta clase:
- * args, scanner, sistema, opcion
+ * args, sc, gestion, opcion
  */
 import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        GestionMascotasCompatibilidad sistema = new GestionMascotasCompatibilidad();
+        Scanner sc = new Scanner(System.in);
+        GestionMascotas gestion = new GestionMascotas();
         String opcion = "";
 
         while (!opcion.equals("0")) {
-            System.out.println("\n=== MÓDULO 2: MASCOTAS Y COMPATIBILIDAD ===");
+            System.out.println("\n=== MÓDULO 2: MASCOTAS ===");
             System.out.println("1. M1 - Registrar mascota");
             System.out.println("2. M2 - Consultar y actualizar perfil de mascota");
             System.out.println("3. M3 - Eliminar perfil de mascota");
-            System.out.println("4. C1 - Evaluar porcentaje de compatibilidad");
-            System.out.println("5. C2 - Generar reporte de mascotas compatibles");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextLine().trim();
+            opcion = sc.nextLine().trim();
 
             switch (opcion) {
                 case "1":
-                    sistema.registrarMascota();
+                    gestion.registrarMascota();
                     break;
                 case "2":
-                    sistema.consultarYActualizarMascota();
+                    gestion.consultarYActualizarMascota();
                     break;
                 case "3":
-                    sistema.eliminarPerfilMascota();
-                    break;
-                case "4":
-                    sistema.evaluarPorcentajeCompatibilidad();
-                    break;
-                case "5":
-                    sistema.generarReporteCompatibles();
+                    gestion.eliminarPerfilMascota();
                     break;
                 case "0":
-                    System.out.println("Saliendo del módulo...");
+                    System.out.println("Saliendo...");
                     break;
                 default:
                     System.out.println("Opción no válida.");

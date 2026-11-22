@@ -1,27 +1,17 @@
+package modulo2;
 /*
  * Variables utilizadas en esta clase:
- * mascotas, adoptantes, contador, sc, codigo, m, cedula, a, txt, e, actual,
- * nombre, especie, edadTxt, tamTxt, enfResp, descEnf, enerTxt, socTxt,
- * estadoTxt, edad, limiteEdad, tamano, tieneEnf, energia, sociabilidad,
- * nueva, nuevoEstado, op, esp, hay, resp, motivo, pts, seleccionada,
- * lista, porc, p, i, j, auxP, auxM
+ * mascotas, contador, sc, codigo, m, disponibles, txt, e, actual, nombre,
+ * especie, edadTxt, tamTxt, enfResp, descEnf, enerTxt, socTxt, estadoTxt,
+ * edad, limiteEdad, tamano, tieneEnf, energia, sociabilidad, nueva,
+ * nuevoEstado, op, esp, hay, resp, motivo
  */
-package modulo2;
-
 import java.util.ArrayList;
 import java.util.Scanner;
-
-public class GestionMascotasCompatibilidad {
+public class GestionMascotas {
     private ArrayList<Mascota> mascotas = new ArrayList<>();
-    private ArrayList<Adoptante> adoptantes = new ArrayList<>();
     private int contador = 1;
     private Scanner sc = new Scanner(System.in);
-
-    public GestionMascotasCompatibilidad() {
-        adoptantes.add(new Adoptante("1711111111", "Carlos Perez", "Activo/Habilitado", "Grande", 3, false));
-        adoptantes.add(new Adoptante("1722222222", "Maria Gomez", "Activo/Habilitado", "Pequeño", 6, true));
-        adoptantes.add(new Adoptante("1733333333", "Luis Torres", "Inhabilitado", "Mediano", 4, false));
-    }
 
     private Mascota buscarMascota(String codigo) {
         for (Mascota m : mascotas) {
@@ -32,13 +22,22 @@ public class GestionMascotasCompatibilidad {
         return null;
     }
 
-    private Adoptante buscarAdoptante(String cedula) {
-        for (Adoptante a : adoptantes) {
-            if (a.getCedula().equals(cedula)) {
-                return a;
-            }
+    public Mascota obtenerMascotaDisponible(String codigo) {
+        Mascota m = buscarMascota(codigo);
+        if (m != null && m.getEstado().equalsIgnoreCase("Disponible")) {
+            return m;
         }
         return null;
+    }
+
+    public ArrayList<Mascota> obtenerMascotasDisponibles() {
+        ArrayList<Mascota> disponibles = new ArrayList<>();
+        for (Mascota m : mascotas) {
+            if (m.getEstado().equalsIgnoreCase("Disponible")) {
+                disponibles.add(m);
+            }
+        }
+        return disponibles;
     }
 
     private int aEntero(String txt) {
@@ -221,7 +220,7 @@ public class GestionMascotasCompatibilidad {
             boolean hay = false;
             for (Mascota m : mascotas) {
                 if (m.getEspecie().equalsIgnoreCase(esp)) {
-                    System.out.println("-----\n" + m.obtenerResumen(true));
+                    System.out.println("-----\n" + m.obtenerResumen());
                     hay = true;
                 }
             }
@@ -242,7 +241,7 @@ public class GestionMascotasCompatibilidad {
             return;
         }
 
-        System.out.println("\n" + m.obtenerResumen(true));
+        System.out.println("\n" + m.obtenerResumen());
         System.out.print("¿Desea actualizar esta mascota? (Si/No): ");
         String resp = sc.nextLine().trim().toLowerCase();
         if (resp.equals("si") || resp.equals("sí")) {
@@ -282,122 +281,4 @@ public class GestionMascotasCompatibilidad {
         System.out.println("La mascota ha sido retirada correctamente del catálogo");
     }
 
-    public double calcularCompatibilidad(Adoptante a, Mascota m) {
-        if (a.isTieneNinos() && m.getNivelSociabilidad() == 1) {
-            return 0;
-        }
-
-        double pts = 0;
-
-        if (m.getNivelSociabilidad() == 3) {
-            pts += 35;
-        } else if (m.getNivelSociabilidad() == 2) {
-            pts += 25;
-        } else {
-            pts += 20;
-        }
-
-        if (m.getEspecie().equalsIgnoreCase("gato") || m.getTamanoAproximado() <= 40) {
-            pts += 35;
-        } else if (a.getEspacioDisponible().equalsIgnoreCase("Grande")) {
-            pts += 35;
-        } else if (a.getEspacioDisponible().equalsIgnoreCase("Mediano")) {
-            pts += 25;
-        } else {
-            pts += 10;
-        }
-
-        if (m.getNivelEnergia() == 1 || a.getHorasFueraCasa() <= 4) {
-            pts += 30;
-        } else if (a.getHorasFueraCasa() <= 6) {
-            pts += 20;
-        } else {
-            pts += 10;
-        }
-
-        return pts;
-    }
-
-    private Adoptante validarAdoptante() {
-        System.out.print("Cédula del adoptante: ");
-        Adoptante a = buscarAdoptante(sc.nextLine().trim());
-        if (a == null) {
-            System.out.println("Error: El adoptante ingresado no está registrado");
-            return null;
-        }
-        if (!a.getEstado().equalsIgnoreCase("Activo/Habilitado")) {
-            System.out.println("Error: El adoptante está inhabilitado para realizar una adopción");
-            return null;
-        }
-        return a;
-    }
-
-    public void evaluarPorcentajeCompatibilidad() {
-        System.out.println("\n--- C1: EVALUAR COMPATIBILIDAD ---");
-        Adoptante a = validarAdoptante();
-        if (a == null) {
-            return;
-        }
-
-        System.out.print("Código de la mascota: ");
-        Mascota seleccionada = buscarMascota(sc.nextLine().trim());
-        if (seleccionada == null || !seleccionada.getEstado().equalsIgnoreCase("Disponible")) {
-            System.out.println("Error: La mascota ingresada no se encuentra disponible");
-            return;
-        }
-
-        System.out.println("Compatibilidad con " + seleccionada.getNombre() + ": " + calcularCompatibilidad(a, seleccionada) + "%");
-        System.out.println("\nTodas las mascotas disponibles:");
-        for (Mascota m : mascotas) {
-            if (m.getEstado().equalsIgnoreCase("Disponible")) {
-                System.out.println("- " + m.getNombre() + ": " + calcularCompatibilidad(a, m) + "%");
-            }
-        }
-    }
-
-    public void generarReporteCompatibles() {
-        System.out.println("\n--- C2: REPORTE DE COMPATIBLES ---");
-        Adoptante a = validarAdoptante();
-        if (a == null) {
-            return;
-        }
-
-        ArrayList<Mascota> lista = new ArrayList<>();
-        ArrayList<Double> porc = new ArrayList<>();
-
-        for (Mascota m : mascotas) {
-            if (m.getEstado().equalsIgnoreCase("Disponible")) {
-                double p = calcularCompatibilidad(a, m);
-                if (p > 60) {
-                    lista.add(m);
-                    porc.add(p);
-                }
-            }
-        }
-
-        if (lista.isEmpty()) {
-            System.out.println("No se encontraron mascotas con el nivel mínimo de compatibilidad requerido");
-            return;
-        }
-
-        for (int i = 0; i < porc.size() - 1; i++) {
-            for (int j = 0; j < porc.size() - 1 - i; j++) {
-                if (porc.get(j) < porc.get(j + 1)) {
-                    double auxP = porc.get(j);
-                    porc.set(j, porc.get(j + 1));
-                    porc.set(j + 1, auxP);
-
-                    Mascota auxM = lista.get(j);
-                    lista.set(j, lista.get(j + 1));
-                    lista.set(j + 1, auxM);
-                }
-            }
-        }
-
-        for (int i = 0; i < lista.size(); i++) {
-            System.out.println("-----");
-            System.out.println(lista.get(i).obtenerResumen(false));
-            System.out.println("Compatibilidad: " + porc.get(i) + "%");
-        }
-    }
 }

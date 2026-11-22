@@ -3,7 +3,7 @@ package modulo2;
  * Variables utilizadas en esta clase:
  * codigo, nombre, especie, edad, tamanoAproximado, presenciaEnfermedades,
  * descripcionEnfermedad, nivelEnergia, nivelSociabilidad, estado, motivoRetiro,
- * mostrarCodigo, salud, energiaTexto, sociabilidadTexto, resumen
+ * salud, energiaTexto, sociabilidadTexto, resumen
  */
 public class Mascota {
     private String codigo;
@@ -118,7 +118,7 @@ public class Mascota {
         this.motivoRetiro = motivoRetiro;
     }
 
-    public String obtenerResumen(boolean mostrarCodigo) {
+    public String obtenerResumen() {
         String salud = presenciaEnfermedades ? "Sí (" + descripcionEnfermedad + ")" : "No";
         String energiaTexto;
         if (nivelEnergia == 1) {
@@ -138,10 +138,7 @@ public class Mascota {
             sociabilidadTexto = "3 - Alta sociabilidad";
         }
 
-        String resumen = "";
-        if (mostrarCodigo) {
-            resumen += "Código: " + codigo + "\n";
-        }
+        String resumen = "Código: " + codigo + "\n";
         resumen += "Nombre: " + nombre + "\n";
         resumen += "Especie: " + especie + "\n";
         resumen += "Edad: " + edad + " años\n";
